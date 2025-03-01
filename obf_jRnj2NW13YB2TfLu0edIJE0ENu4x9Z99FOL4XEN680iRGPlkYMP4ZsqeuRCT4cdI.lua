@@ -1,12 +1,380 @@
-local Players=game:GetService("Players");local UserInputService=game:GetService("UserInputService");local RunService=game:GetService("RunService");local StarterGui=game:GetService("StarterGui");local player=Players.LocalPlayer;local mouse=player:GetMouse();local aimbotEnabled=false;local Rayfield=loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua"))();local Window=Rayfield:CreateWindow({Name="Aimbot for Emergency Emden",LoadingTitle="Aimbot Menu",LoadingSubtitle="by Grok",ConfigurationSaving={Enabled=false,FolderName=nil,FileName="AimbotConfig"},Discord={Enabled=false,Invite="",RememberJoins=true},KeySystem=true,KeySettings={Title="Untitled",Subtitle="Key System",Note="No method of obtaining the key is provided",FileName="Key",SaveKey=true,GrabKeyFromSite=false,Key={"ILoveUVG9yaQ=="}}});local Tab=Window:CreateTab("Main",4483362458);Tab:CreateToggle({Name="Enable Aimbot",CurrentValue=false,Flag="AimbotToggle",Callback=function(Value) aimbotEnabled=Value;Rayfield:Notify({Title="Aimbot Status",Content=(aimbotEnabled and "Aimbot Enabled!") or "Aimbot Disabled!" ,Duration=2,Image=4483362458});end});Tab:CreateLabel("Hold Right Mouse Button to aim");local function getClosestPlayer() local closestPlayer=nil;local closestDistance=math.huge;local character=player.Character;local humanoidRootPart=character and character:FindFirstChild("HumanoidRootPart") ;if  not humanoidRootPart then return nil;end for _,otherPlayer in pairs(Players:GetPlayers()) do if ((otherPlayer~=player) and otherPlayer.Character) then local targetHumanoid=otherPlayer.Character:FindFirstChild("Humanoid");local targetRootPart=otherPlayer.Character:FindFirstChild("HumanoidRootPart");if (targetHumanoid and targetRootPart and (targetHumanoid.Health>0)) then local distance=(humanoidRootPart.Position-targetRootPart.Position).Magnitude;if (distance<closestDistance) then closestDistance=distance;closestPlayer=otherPlayer;end end end end return closestPlayer;end local function aimAt(target) local character=player.Character;local humanoidRootPart=character and character:FindFirstChild("HumanoidRootPart") ;local targetRootPart=target.Character and target.Character:FindFirstChild("Head") ;if (humanoidRootPart and targetRootPart) then local camera=workspace.CurrentCamera;camera.CFrame=CFrame.new(camera.CFrame.Position,targetRootPart.Position);end end local aiming=false;UserInputService.InputBegan:Connect(function(input,gameProcessedEvent) if ((input.UserInputType==Enum.UserInputType.MouseButton2) and  not gameProcessedEvent) then aiming=true;end end);UserInputService.InputEnded:Connect(function(input) if (input.UserInputType==Enum.UserInputType.MouseButton2) then aiming=false;end end);RunService.RenderStepped:Connect(function() if (aimbotEnabled and aiming) then local closestPlayer=getClosestPlayer();if closestPlayer then aimAt(closestPlayer);end end end);Rayfield:Notify({Title="Aimbot Loaded",Content="Script loaded successfully!",Duration=3,Image=4483362458});
--- ⚠️ WARNING: integrity protected!
---[[
- .____                  ________ ___.    _____                           __                
- |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
- |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
- |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
- |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
-         \/          \/         \/    \/                \/     \/     \/                   
-          \_Welcome to LuaObfuscator.com   (Alpha 0.10.8) ~  Much Love, Ferib 
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+local aimbotEnabled = false
+local fovRadius = 150 -- Bán kính FOV cố định
+local aimDelay = 0.1 -- Độ trễ giữa các lần khóa mục tiêu (giây)
+local toggleKey = Enum.KeyCode.T -- Phím tắt mặc định để bật/tắt aimbot
 
-]]--
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua"))()
+local Window = Rayfield:CreateWindow({
+    Name = "Emergency Emden Script (BETA) | By Grok",
+    LoadingTitle = "Aimbot Menu",
+    LoadingSubtitle = "by Grok",
+    Theme = "Light",
+    ConfigurationSaving = {
+        Enabled = false,
+        FolderName = nil,
+        FileName = "AimbotConfig"
+    },
+    Discord = {
+        Enabled = true,
+        Invite = "G7GauBjDxc",
+        RememberJoins = true
+    },
+    KeySystem = true,
+    KeySettings = {
+        Title = "Key Systems | Grok",
+        Subtitle = "Key System | Fin12n",
+        Note = "guns.lol/fin12n | Get key here!",
+        FileName = "Key",
+        SaveKey = true,
+        GrabKeyFromSite = false,
+        Key = {"ILoveUVG9yaQ=="}
+    }
+})
+
+local Welcome = Window:CreateTab("Info", 4483362458)
+local Main = Window:CreateTab("Main", 4483362458)
+local Aimbot = Window:CreateTab("Aimbot (BETA)", 4483362458)
+
+Welcome:CreateLabel("Script v1.0.5")
+Welcome:CreateLabel("Script generated by Grok | Edit by Fin12n (Private Script)")
+Welcome:CreateLabel("[+] New Aimbot (BETA)\n[+] Fly (Patched)\n[+] Noclip (New) (BETA)\n[+] ESP/Glow (BETA)")
+
+Main:CreateLabel("Fly Function is patched! Please wait")
+
+--Noclip Function
+Main:CreateButton({
+    Name = "Noclip Function",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local mouse = player:GetMouse()
+local noclip = false
+
+-- Hàm bật/tắt noclip
+local function toggleNoclip()
+    noclip = not noclip
+    if noclip then
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    else
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
+    end
+end
+
+-- Điều khiển bật/tắt noclip
+mouse.KeyDown:Connect(function(key)
+    if key == "o" then -- Nhấn N để bật/tắt noclip
+        toggleNoclip()
+    end
+end)
+
+-- Đảm bảo noclip vẫn hoạt động khi nhân vật tái sinh
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    if noclip then
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+Rayfield:Notify({
+    Title = "Noclip Enable!",
+    Content = "Press `o` to On | Press again to off",
+    Duration = 3,
+    Image = 4483362458
+})
+    end
+})
+
+--ESP/Glow
+-- Biến để theo dõi trạng thái và lưu trữ
+local isEnabled = false
+local highlights = {}
+
+-- Hàm thêm Glow và Name Tag
+local function addESPToPlayer(player)
+    if player.Character then
+        local character = player.Character
+        local head = character:WaitForChild("Head", 5)
+        if head and not highlights[player] then
+            -- Thêm Glow
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "ESPGlow"
+            highlight.FillColor = Color3.fromRGB(255, 255, 255)
+            highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+            highlight.FillTransparency = 0.3
+            highlight.OutlineTransparency = 0
+            highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            highlight.Parent = character
+
+            -- Thêm Name Tag + Khoảng cách
+            local billboard = Instance.new("BillboardGui")
+            billboard.Name = "ESPName"
+            billboard.Size = UDim2.new(0, 150, 0, 40)
+            billboard.StudsOffset = Vector3.new(0, 3, 0)
+            billboard.AlwaysOnTop = true
+            billboard.Parent = head
+
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
+            nameLabel.Position = UDim2.new(0, 0, 0, 0)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.Text = player.Name
+            nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            nameLabel.TextSize = 18
+            nameLabel.Font = Enum.Font.SourceSansBold
+            nameLabel.TextScaled = false
+            nameLabel.Parent = billboard
+
+            local distanceLabel = Instance.new("TextLabel")
+            distanceLabel.Size = UDim2.new(1, 0, 0.5, 0)
+            distanceLabel.Position = UDim2.new(0, 0, 0.5, 0)
+            distanceLabel.BackgroundTransparency = 1
+            distanceLabel.Text = "N/A"
+            distanceLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            distanceLabel.TextSize = 14
+            distanceLabel.Font = Enum.Font.SourceSans
+            distanceLabel.TextScaled = false
+            distanceLabel.Parent = billboard
+
+            highlights[player] = { Highlight = highlight, Billboard = billboard, DistanceLabel = distanceLabel }
+        end
+    end
+
+    -- Xử lý khi nhân vật respawn
+    player.CharacterAdded:Connect(function(character)
+        local head = character:WaitForChild("Head", 5)
+        if head and isEnabled then
+            if highlights[player] then
+                if highlights[player].Highlight then highlights[player].Highlight:Destroy() end
+                if highlights[player].Billboard then highlights[player].Billboard:Destroy() end
+            end
+
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "ESPGlow"
+            highlight.FillColor = Color3.fromRGB(255, 255, 255)
+            highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+            highlight.FillTransparency = 0.3
+            highlight.OutlineTransparency = 0
+            highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            highlight.Parent = character
+
+            local billboard = Instance.new("BillboardGui")
+            billboard.Name = "ESPName"
+            billboard.Size = UDim2.new(0, 150, 0, 40)
+            billboard.StudsOffset = Vector3.new(0, 3, 0)
+            billboard.AlwaysOnTop = true
+            billboard.Parent = head
+
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
+            nameLabel.Position = UDim2.new(0, 0, 0, 0)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.Text = player.Name
+            nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            nameLabel.TextSize = 18
+            nameLabel.Font = Enum.Font.SourceSansBold
+            nameLabel.TextScaled = false
+            nameLabel.Parent = billboard
+
+            local distanceLabel = Instance.new("TextLabel")
+            distanceLabel.Size = UDim2.new(1, 0, 0.5, 0)
+            distanceLabel.Position = UDim2.new(0, 0, 0.5, 0)
+            distanceLabel.BackgroundTransparency = 1
+            distanceLabel.Text = "N/A"
+            distanceLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            distanceLabel.TextSize = 14
+            distanceLabel.Font = Enum.Font.SourceSans
+            distanceLabel.TextScaled = false
+            distanceLabel.Parent = billboard
+
+            highlights[player] = { Highlight = highlight, Billboard = billboard, DistanceLabel = distanceLabel }
+        end
+    end)
+end
+
+-- Hàm bật ESP cho tất cả người chơi
+local function enableESP()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        addESPToPlayer(player)
+    end
+end
+
+-- Hàm tắt ESP
+local function disableESP()
+    for player, data in pairs(highlights) do
+        if data.Highlight then data.Highlight:Destroy() end
+        if data.Billboard then data.Billboard:Destroy() end
+    end
+    highlights = {}
+end
+
+-- Cập nhật khoảng cách (sửa lỗi)
+local RunService = game:GetService("RunService")
+RunService.RenderStepped:Connect(function()
+    if isEnabled then
+        local localPlayer = game.Players.LocalPlayer
+        local localChar = localPlayer.Character
+        local localRoot = localChar and localChar:FindFirstChild("HumanoidRootPart")
+        if localRoot then
+            local localPos = localRoot.Position
+            for player, data in pairs(highlights) do
+                local character = player.Character
+                local targetRoot = character and character:FindFirstChild("HumanoidRootPart")
+                if targetRoot then
+                    local distance = (localPos - targetRoot.Position).Magnitude
+                    data.DistanceLabel.Text = math.floor(distance) .. " studs"
+                else
+                    data.DistanceLabel.Text = "N/A"
+                end
+            end
+        end
+    end
+end)
+
+-- Xử lý người chơi mới
+game.Players.PlayerAdded:Connect(function(player)
+    if isEnabled then
+        addESPToPlayer(player)
+    end
+end)
+
+-- Xử lý người chơi rời game
+game.Players.PlayerRemoving:Connect(function(player)
+    if highlights[player] then
+        if highlights[player].Highlight then highlights[player].Highlight:Destroy() end
+        if highlights[player].Billboard then highlights[player].Billboard:Destroy() end
+        highlights[player] = nil
+    end
+end)
+
+-- Nút bật/tắt
+Main:CreateButton({
+    Name = "Enable/Disable Glow + Nametag",
+    Callback = function()
+        isEnabled = not isEnabled
+        if isEnabled then
+            enableESP()
+        else
+            disableESP()
+        end
+    end
+})
+
+Aimbot:CreateToggle({
+    Name = "Enable Aimbot",
+    CurrentValue = false,
+    Flag = "AimbotToggle",
+    Callback = function(Value)
+        aimbotEnabled = Value
+        Rayfield:Notify({
+            Title = "Aimbot Status",
+            Content = aimbotEnabled and "Aimbot Enabled!" or "Aimbot Disabled!",
+            Duration = 2,
+            Image = 4483362458
+        })
+    end
+})
+
+Aimbot:CreateLabel("Hold Right Mouse Button to aim\nPress `T` to Toggle")
+Aimbot:CreateLabel("Funcition in this BETA (So u may Banned) BEWARE!")
+
+-- Hàm kiểm tra mục tiêu dưới crosshair (vị trí chuột)
+local function getTargetUnderCrosshair()
+    local targetPlayer = nil
+    local closestDistance = math.huge
+    local mousePos = Vector2.new(mouse.X, mouse.Y)
+
+    for _, otherPlayer in pairs(Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character then
+            local targetHumanoid = otherPlayer.Character:FindFirstChild("Humanoid")
+            local targetRootPart = otherPlayer.Character:FindFirstChild("Head")
+            if targetHumanoid and targetRootPart and targetHumanoid.Health > 0 then
+                local screenPoint, onScreen = workspace.CurrentCamera:WorldToViewportPoint(targetRootPart.Position)
+                if onScreen then
+                    local targetPos = Vector2.new(screenPoint.X, screenPoint.Y)
+                    local distance = (mousePos - targetPos).Magnitude
+                    if distance < closestDistance and distance <= fovRadius then
+                        closestDistance = distance
+                        targetPlayer = otherPlayer
+                    end
+                end
+            end
+        end
+    end
+    return targetPlayer
+end
+
+-- Hàm điều chỉnh camera để khóa mục tiêu
+local function aimAt(target)
+    local character = player.Character
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+    local targetRootPart = target.Character and target.Character:FindFirstChild("Head") -- Khóa vào đầu
+
+    if humanoidRootPart and targetRootPart then
+        local camera = workspace.CurrentCamera
+        camera.CFrame = CFrame.new(camera.CFrame.Position, targetRootPart.Position)
+    end
+end
+
+-- Logic phím tắt để bật/tắt aimbot
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.KeyCode == toggleKey and not gameProcessedEvent then
+        aimbotEnabled = not aimbotEnabled
+        Rayfield:Notify({
+            Title = "Aimbot Status",
+            Content = aimbotEnabled and "Aimbot Enabled!" or "Aimbot Disabled!",
+            Duration = 2,
+            Image = 4483362458
+        })
+        -- Đồng bộ trạng thái toggle trong menu
+        Rayfield:Set("AimbotToggle", aimbotEnabled)
+    end
+end)
+
+-- Logic aimbot khi giữ phím chuột phải
+local aiming = false
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 and not gameProcessedEvent then
+        aiming = true
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        aiming = false
+    end
+end)
+
+-- Vòng lặp aimbot (chuyển mục tiêu ngay lập tức theo crosshair)
+RunService.RenderStepped:Connect(function()
+    if aimbotEnabled and aiming then
+        local target = getTargetUnderCrosshair()
+        if target then
+            aimAt(target)
+            wait(aimDelay) -- Thêm độ trễ để trông tự nhiên
+        end
+    end
+end)
+
+Rayfield:Notify({
+    Title = "Script Loaded",
+    Content = "Script loaded successfully! | Have a Funny time!",
+    Duration = 3,
+    Image = 4483362458
+})
