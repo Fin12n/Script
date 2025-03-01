@@ -19,6 +19,7 @@ local KavoUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc
 local Window = KavoUI.CreateLib("Emergency Emden Script (BETA) | By Grok", "Ocean")
 
 --- Create Tabs
+local Other = Window:NewTab("Other Script")
 local Welcome = Window:NewTab("Info")
 local Main = Window:NewTab("Main")
 local Aimbot = Window:NewTab("Aimbot")
@@ -26,12 +27,17 @@ local TeleportUI= Window:NewTab("Teleport")
 local Settings = Window:NewTab("Settings")
 
 -- Create Section
+local Other = Other:NewSection("Other Script")
 local TeleportUI = TeleportUI:NewSection("Teleport UI")
 local Info = Welcome:NewSection("Information") 
 local MainSection = Main:NewSection("Main Tab") -- Sửa tên biến từ Main thành MainSection
 local AimbotSection = Aimbot:NewSection("Aimbot Tab") -- Sửa tên biến từ Aimbot thành AimbotSection
 local Settings = Settings:NewSection("Settings")
 
+
+--Other Script
+Orther:NewButton("Infinity Yield Script (Click to inject)")), "", function()
+    loastring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source"))()
 --Teleport
 TeleportUI:NewButton("Teleport UI (Press `Y` for hide/show UI) [BETA]", "", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Fin12n/Script/refs/heads/main/teleport.lua"))()
