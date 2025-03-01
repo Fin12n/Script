@@ -408,6 +408,6 @@ RunService.RenderStepped:Connect(function()
 end)
 
 --Teleport
-TeleportUISection:NewButton("Teleport UI (Press `Y` for hide/show UI) [BETA]", "ButtonInfo", function()
+TeleportUI:NewButton("Teleport UI (Press `Y` for hide/show UI) [BETA]", "ButtonInfo", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Fin12n/Script/refs/heads/main/teleport.lua"))()
 end)
