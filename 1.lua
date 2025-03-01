@@ -46,7 +46,7 @@ end)
 Settings:NewLabel("Change ur on/off UI (Default: V)")
 
 -- Fly Button (giữ nguyên)
-MainSection:NewButton("Fly", "Press `O` to fly", function()
+MainSection:NewButton("Fly (Press `X` to fly [BETA]", "Press `O` to fly", function()
     local flyEnabled = false
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
@@ -54,9 +54,10 @@ MainSection:NewButton("Fly", "Press `O` to fly", function()
     local toggleKey2 = Enum.KeyCode.X
     local bodyVelocity, bodyGyro
 
-MainSection:NewSlider("Fly speed", "Change yout speed when u fly", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+MainSection:NewSlider("Fly speed (Dont change to 500, 100-200 to not ban", "Change yout speed when u fly", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
         flySpeed = s
     end)
+MainSection:NewLabel("Dont fly in water and fly in wall\nU will ban")
 
     player.CharacterAdded:Connect(function(newCharacter)
         character = newCharacter
@@ -121,7 +122,7 @@ MainSection:NewSlider("Fly speed", "Change yout speed when u fly", 500, 0, funct
 end)
 
 -- Noclip Function (giữ nguyên)
-MainSection:NewButton("Noclip", "Press `N` to Noclip", function()
+MainSection:NewButton("Noclip Press `N` to Noclip", "Press `N` to Noclip", function()
     local function toggleNoclip()
         noclipEnabled = not noclipEnabled
         if noclipEnabled then
@@ -317,7 +318,7 @@ MainSection:NewButton("ESP/Glow", "Enable ESP/Glow", function()
     end
 end)
 
-AimbotSection:NewToggle("Aimbot", "Press `T` to Enable", function(state)
+AimbotSection:NewToggle("Aimbot Press `T` to toggle", "Press `T` to Enable", function(state)
     if state then
         aimbotEnabled = true
 MainSection:NewSlider("FOV", "Change your FOV", 500, 0, function(l) -- 500 (MaxValue) | 0 (MinValue)
