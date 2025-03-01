@@ -328,8 +328,8 @@ end)
 AimbotSection:NewToggle("Aimbot Press `T` to toggle", "Press `T` to Enable", function(state)
     if state then
         aimbotEnabled = true
-MainSection:NewSlider("FOV", "Change your FOV", 500, 0, function(l) -- 500 (MaxValue) | 0 (MinValue)
-        fovRadius = l
+AimbotSection:NewSlider("FOV", "Change your FOV", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+        fovRadius = s
     end)
     else
         aimbotEnabled = false
