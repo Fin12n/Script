@@ -320,18 +320,11 @@ end)
 AimbotSection:NewToggle("Aimbot", "Press `T` to Enable", function(state)
     if state then
         aimbotEnabled = true
-        StarterGui:SetCore("SendNotification", {
-            Title = "Aimbot Status",
-            Text = "Aimbot Enabled!",
-            Duration = 2
-        })
+MainSection:NewSlider("FOV", "Change your FOV", 500, 0, function(l) -- 500 (MaxValue) | 0 (MinValue)
+        fovRadius = l
+    end)
     else
         aimbotEnabled = false
-        StarterGui:SetCore("SendNotification", {
-            Title = "Aimbot Status",
-            Text = "Aimbot Disabled!",
-            Duration = 2
-        })
     end
 end)
 
