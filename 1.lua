@@ -22,9 +22,11 @@ local Window = KavoUI.CreateLib("Emergency Emden Script (BETA) | By Grok", "Ocea
 local Welcome = Window:NewTab("Info")
 local Main = Window:NewTab("Main")
 local Aimbot = Window:NewTab("Aimbot")
+local TeleportUI= Window:NewTab("Teleport")
 local Settings = Window:NewTab("Settings")
 
 -- Create Section
+local TeleportUI = TeleportUI:NewSection("Teleport UI")
 local Info = Welcome:NewSection("Information") 
 local MainSection = Main:NewSection("Main Tab") -- Sửa tên biến từ Main thành MainSection
 local AimbotSection = Aimbot:NewSection("Aimbot Tab") -- Sửa tên biến từ Aimbot thành AimbotSection
@@ -403,4 +405,9 @@ RunService.RenderStepped:Connect(function()
             task.wait(aimDelay) -- Sửa từ wait thành task.wait cho hiệu suất tốt hơn
         end
     end
+end)
+
+--Teleport
+TeleportUISection:NewButton("Teleport UI (Press `Y` for hide/show UI) [BETA]", "ButtonInfo", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Fin12n/Script/refs/heads/main/teleport.lua"))()
 end)
