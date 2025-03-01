@@ -11,7 +11,7 @@ local toggleKey = Enum.KeyCode.T -- Phím tắt mặc định để bật/tắt 
 local noclipEnabled = false -- Mặc định tắt, bật/tắt bằng phím O
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
-local toggleKey = Enum.KeyCode.O -- Phím tắt mặc định là O
+local toggleKey1 = Enum.KeyCode.O -- Phím tắt mặc định là O
 
 local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua"))()
 local Window = Rayfield:CreateWindow({
@@ -98,7 +98,7 @@ end)
 
 -- Logic phím tắt để bật/tắt Noclip
 UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if input.KeyCode == toggleKey and not gameProcessedEvent then
+    if input.KeyCode == toggleKey1 and not gameProcessedEvent then
         noclipEnabled = not noclipEnabled
         if noclipEnabled then
             enableNoclip()
