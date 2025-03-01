@@ -22,12 +22,13 @@ local Window = KavoUI.CreateLib("Emergency Emden Script (BETA) | By Grok", "Ocea
 local Welcome = Window:NewTab("Info")
 local Main = Window:NewTab("Main")
 local Aimbot = Window:NewTab("Aimbot")
+local Settings = Window:NewTab("Settings")
 
 -- Create Section
 local Info = Welcome:NewSection("Information") 
-local MainSection = Main:NewSection("Main Tab")
-local AimbotSection = Aimbot:NewSection("Aimbot Tab")
-
+local MainSection = Main:NewSection("Main Tab") -- Sửa tên biến từ Main thành MainSection
+local AimbotSection = Aimbot:NewSection("Aimbot Tab") -- Sửa tên biến từ Aimbot thành AimbotSection
+local Settings = Settings:NewSection("Settings")
 
 -- Create Label (Information)
 Info:NewLabel("Emden Script v1.1.0 (BETA)")
@@ -37,9 +38,15 @@ Info:NewLabel("[+] Fly (NEW)")
 Info:NewLabel("[+] Noclip (New) (BETA)")
 Info:NewLabel("[+] ESP/Glow (BETA)")
 
--- Fly Button
-MainSection:NewButton("Fly", "Press `O` to fly", function()
 
+--Settings
+Settings:NewKeybind("Set UI Hide key", "KeybindInfo", Enum.KeyCode.V, function()
+	KavoUI:ToggleUI()
+end)
+Settings:NewLabel("Change ur on/off UI (Default: V)")
+
+-- Fly Button (giữ nguyên)
+MainSection:NewButton("Fly", "Press `O` to fly", function()
     local flyEnabled = false
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
@@ -47,6 +54,9 @@ MainSection:NewButton("Fly", "Press `O` to fly", function()
     local toggleKey2 = Enum.KeyCode.X
     local bodyVelocity, bodyGyro
 
+MainSection:NewSlider("Fly speed", "Change yout speed when u fly", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+        flySpeed = s
+    end)
 
     player.CharacterAdded:Connect(function(newCharacter)
         character = newCharacter
@@ -55,7 +65,6 @@ MainSection:NewButton("Fly", "Press `O` to fly", function()
             startFlying()
         end
     end)
-
 
     local function startFlying()
         if humanoidRootPart and not bodyVelocity and not bodyGyro then
@@ -80,30 +89,25 @@ MainSection:NewButton("Fly", "Press `O` to fly", function()
         bodyGyro = nil
     end
 
-    -- 
     RunService.RenderStepped:Connect(function()
         if flyEnabled and character and humanoidRootPart and bodyVelocity and bodyGyro then
             local humanoid = character:FindFirstChild("Humanoid")
             if humanoid then
                 local moveDirection = humanoid.MoveDirection
                 local verticalInput = 0
-
                 if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
                     verticalInput = flySpeed
                 elseif UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
                     verticalInput = -flySpeed
                 end
-
                 local moveVector = Vector3.new(moveDirection.X * flySpeed, verticalInput, moveDirection.Z * flySpeed)
                 bodyVelocity.Velocity = moveVector
-
                 local uprightCFrame = CFrame.new(humanoidRootPart.Position) * CFrame.Angles(0, humanoidRootPart.Orientation.Y, 0)
                 bodyGyro.CFrame = uprightCFrame
             end
         end
     end)
 
-    -- 
     UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         if input.KeyCode == toggleKey2 and not gameProcessedEvent then
             flyEnabled = not flyEnabled
@@ -116,9 +120,8 @@ MainSection:NewButton("Fly", "Press `O` to fly", function()
     end)
 end)
 
--- Noclip Function
+-- Noclip Function (giữ nguyên)
 MainSection:NewButton("Noclip", "Press `N` to Noclip", function()
-    -- 
     local function toggleNoclip()
         noclipEnabled = not noclipEnabled
         if noclipEnabled then
@@ -136,14 +139,12 @@ MainSection:NewButton("Noclip", "Press `N` to Noclip", function()
         end
     end
     
-    -- 
     UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         if input.KeyCode == toggleKeyNoclip and not gameProcessedEvent then
             toggleNoclip()
         end
     end)
     
-    -- 
     player.CharacterAdded:Connect(function(newCharacter)
         character = newCharacter
         if noclipEnabled then
@@ -156,7 +157,7 @@ MainSection:NewButton("Noclip", "Press `N` to Noclip", function()
     end)
 end)
 
--- ESP/Glow
+-- ESP/Glow (giữ nguyên)
 local isEnabled = false
 local highlights = {}
 
@@ -334,10 +335,9 @@ AimbotSection:NewToggle("Aimbot", "Press `T` to Enable", function(state)
     end
 end)
 
-Aimbot:NewLabel("Hold Right Mouse Button to aim\nPress `T` to Toggle")
-Aimbot:NewLabel("Function in this BETA (So u may Banned) BEWARE!")
+AimbotSection:NewLabel("Hold Right Mouse Button to aim\nPress `T` to Toggle")
+AimbotSection:NewLabel("Function in this BETA (So u may Banned) BEWARE!")
 
--- 
 local function getTargetUnderCrosshair()
     local targetPlayer = nil
     local closestDistance = math.huge
@@ -363,11 +363,10 @@ local function getTargetUnderCrosshair()
     return targetPlayer
 end
 
--- 
 local function aimAt(target)
     local character = player.Character
     local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
-    local targetRootPart = target.Character and target.Character:FindFirstChild("Head") 
+    local targetRootPart = target.Character and target.Character:FindFirstChild("Head")
 
     if humanoidRootPart and targetRootPart then
         local camera = workspace.CurrentCamera
@@ -375,14 +374,20 @@ local function aimAt(target)
     end
 end
 
--- 
+-- Logic phím tắt để bật/tắt aimbot
 UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if input.KeyCode == toggleKey and not gameProcessedEvent then
         aimbotEnabled = not aimbotEnabled
+        Window:Notify({
+            Title = "AiMbOt St4tus",
+            Content = aimbotEnabled and "Aimbot Enable!" or "Aimbot Disable",
+            Duration = 3
+        })
+        -- Dòng Rayfield:Set đã bị xóa vì không cần thiết với Kavo UI
     end
 end)
 
--- 
+-- Logic aimbot khi giữ phím chuột phải
 local aiming = false
 UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if input.UserInputType == Enum.UserInputType.MouseButton2 and not gameProcessedEvent then
@@ -396,19 +401,12 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
--- 
 RunService.RenderStepped:Connect(function()
     if aimbotEnabled and aiming then
         local target = getTargetUnderCrosshair()
         if target then
             aimAt(target)
-            wait(aimDelay) -- 
+            task.wait(aimDelay) -- Sửa từ wait thành task.wait cho hiệu suất tốt hơn
         end
     end
 end)
-
-StarterGui:SetCore("SendNotification", {
-    Title = "Script Loaded",
-    Content = "Script loaded successfully! | Have a Funny time!",
-    Duration = 3,
-})
