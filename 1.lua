@@ -1,3 +1,5 @@
+--Last Update 16:01 2/3/2025
+
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -16,28 +18,30 @@ local toggleKeyNoclip = Enum.KeyCode.N
 
 -- Create Window
 local KavoUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = KavoUI.CreateLib("Emergency Emden Script (BETA) | By Grok", "Ocean")
+local Window = KavoUI.CreateLib("Emergency Emden Menu (BETA) | By Grok", "Sentinel")
 
 --- Create Tabs
-local Other = Window:NewTab("Other Script")
+
 local Welcome = Window:NewTab("Info")
 local Main = Window:NewTab("Main")
 local Aimbot = Window:NewTab("Aimbot")
 local TeleportUI= Window:NewTab("Teleport")
+local Other = Window:NewTab("Other Script")
 local Settings = Window:NewTab("Settings")
 
 -- Create Section
-local Other = Other:NewSection("Other Script")
 local TeleportUI = TeleportUI:NewSection("Teleport UI")
 local Info = Welcome:NewSection("Information") 
 local MainSection = Main:NewSection("Main Tab") -- Sửa tên biến từ Main thành MainSection
 local AimbotSection = Aimbot:NewSection("Aimbot Tab") -- Sửa tên biến từ Aimbot thành AimbotSection
+local Other = Other:NewSection("Other Script")
 local Settings = Settings:NewSection("Settings")
 
 
 --Other Script
-Orther:NewButton("Infinity Yield Script (Click to inject)"), "", function()
+Other:NewButton("Infinity Yield Script", "", function()
     loastring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source"))()
+end)
 --Teleport
 TeleportUI:NewButton("Teleport UI (Press `Y` for hide/show UI) [BETA]", "", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Fin12n/Script/refs/heads/main/teleport.lua"))()
@@ -50,6 +54,8 @@ Info:NewLabel("[+] New Aimbot (BETA)")
 Info:NewLabel("[+] Fly (NEW)")
 Info:NewLabel("[+] Noclip (New) (BETA)")
 Info:NewLabel("[+] ESP/Glow (BETA)")
+Info:NewLabel("[+] Teleport (New) [BETA]")
+Info:NewLabel("[+] Inf Jump (New) [BETA]")
 
 
 --Settings
@@ -66,8 +72,7 @@ MainSection:NewButton("Fly (Press `X` to fly [BETA]", "Press `O` to fly", functi
     local flySpeed = 100 
     local toggleKey2 = Enum.KeyCode.X
     local bodyVelocity, bodyGyro
-
-MainSection:NewSlider("Fly speed (Dont change to 500, 100-200 to not ban", "Change yout speed when u fly", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+MainSection:NewSlider("Fly speed", "Change yout speed when u fly", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
         flySpeed = s
     end)
 MainSection:NewLabel("Dont fly in water and fly in wall\nU will ban")
@@ -414,6 +419,115 @@ RunService.RenderStepped:Connect(function()
         if target then
             aimAt(target)
             task.wait(aimDelay) -- Sửa từ wait thành task.wait cho hiệu suất tốt hơn
+        end
+    end
+end)
+
+local location = {
+    "Basement",
+    "Bank (out)",
+    "Vehicle spawn",
+    "Bank (in)",
+    "Diamond Store (high)",
+    "Hospital"
+}
+
+TeleportUI:NewDropdown("Teleport Location", "", location, function(location)
+    if location == "Basement" then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        rootPart.CFrame = CFrame.new(-1948,26,987)
+        StarterGui:SetCore("SendNotification", {
+            Title = "Emden Teleport v0.1.1",
+            Text = "Successfully 🟢",
+            Duration = 3
+        })
+    end
+    if location == "Bank (out)" then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        rootPart.CFrame = CFrame.new(-418,35,-1365)
+        StarterGui:SetCore("SendNotification", {
+            Title = "Emden Teleport v0.1.1",
+            Text = "Successfully 🟢",
+            Duration = 3
+        })
+    end
+    if location == "Vehicle spawn" then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        rootPart.CFrame = CFrame.new(-1004,50,100)
+        StarterGui:SetCore("SendNotification", {
+            Title = "Emden Teleport v0.1.1",
+            Text = "Successfully 🟢",
+            Duration = 3
+        })
+    end
+    if location == "Bank (in)" then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        rootPart.CFrame = CFrame.new(-453, 35,-1378)
+        StarterGui:SetCore("SendNotification", {
+            Title = "Emden Teleport v0.1.1",
+            Text = "Successfully 🟢",
+            Duration = 3
+        })
+    end
+    if location == "Diamond Store (high)" then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        rootPart.CFrame = CFrame.new(-487, 90, 346)
+        StarterGui:SetCore("SendNotification", {
+            Title = "Emden Teleport v0.1.1",
+            Text = "Successfully 🟢",
+            Duration = 3
+        })
+    end
+    if location == "Hospital" then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        rootPart.CFrame = CFrame.new(539, 50, -1761)
+        StarterGui:SetCore("SendNotification", {
+            Title = "Emden Teleport v0.1.1",
+            Text = "Successfully 🟢",
+            Duration = 3
+        })
+    end
+    print(location)
+end)
+-- Toggle bật/tắt nhảy vô hạn
+local infiniteJumpEnabled = false
+MainSection:NewToggle("Infinite Jump", "", function(state)
+    infiniteJumpEnabled = state
+    if state then
+        StarterGui:SetCore("SendNotification", {
+            Title = "Emden Script v1.1.5",
+            Text = "Inf Jump Enabled!",
+            Duration = 3
+        })
+    else
+        StarterGui:SetCore("SendNotification", {
+            Title = "Emden Script v1.1.5",
+            Text = "Inf Jump Disabled!",
+            Duration = 3
+        })
+    end
+end)
+
+-- Logic nhảy vô hạn
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if infiniteJumpEnabled then
+        if character then
+            local humanoid = character:FindFirstChild("Humanoid")
+            if humanoid then
+                humanoid:ChangeState("Jumping")
+            end
         end
     end
 end)
