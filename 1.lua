@@ -36,7 +36,7 @@ local Settings = Settings:NewSection("Settings")
 
 
 --Other Script
-Orther:NewButton("Infinity Yield Script (Click to inject)")), "", function()
+Orther:NewButton("Infinity Yield Script (Click to inject)"), "", function()
     loastring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source"))()
 --Teleport
 TeleportUI:NewButton("Teleport UI (Press `Y` for hide/show UI) [BETA]", "", function()
