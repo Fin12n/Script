@@ -481,7 +481,7 @@ TeleportUI:NewDropdown("Teleport Location", "", location, function(location)
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local rootPart = character:WaitForChild("HumanoidRootPart")
-        rootPart.CFrame = CFrame.new(-487, 90, 346)
+        rootPart.CFrame = CFrame.new(-487, 100, 346)
         StarterGui:SetCore("SendNotification", {
             Title = "Emden Teleport v0.1.1",
             Text = "Successfully 🟢",
